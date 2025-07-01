@@ -1,4 +1,4 @@
-import { useStorageState } from "@hooks/useStorageState";
+import { useStorageState } from "@hooks/useStorageState"; // Storage backed by Expo SecureStore
 import { LoginRequest } from "@interfaces/auth/LoginRequest";
 import { RegisterRequest } from "@interfaces/auth/RegisterRequest";
 import Api from "@services/api";

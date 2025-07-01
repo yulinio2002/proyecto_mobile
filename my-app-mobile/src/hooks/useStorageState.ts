@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useReducer } from "react";
+import * as SecureStore from "expo-secure-store";
 
 type UseStateHook<T> = [[boolean, T | null], (value: T | null) => void];
 
@@ -15,25 +16,26 @@ function useAsyncState<T>(
 }
 
 export async function setStorageItemAsync(key: string, value: string | null) {
-	try {
-		if (value === null) localStorage.removeItem(key);
-		else localStorage.setItem(key, value);
-	} catch (error) {
-		console.error("Error setting storage item: ", error);
-	}
+        try {
+                if (value === null) await SecureStore.deleteItemAsync(key);
+                else await SecureStore.setItemAsync(key, value);
+        } catch (error) {
+                console.error("Error setting storage item: ", error);
+        }
 }
 
 export function useStorageState(key: string): UseStateHook<string> {
 	const [state, setState] = useAsyncState<string>();
 
-	useEffect(() => {
-		try {
-			if (typeof localStorage !== "undefined")
-				setState(localStorage.getItem(key));
-		} catch (error) {
-			console.error("Error getting storage item: ", error);
-		}
-	}, [key]);
+        useEffect(() => {
+                SecureStore.getItemAsync(key)
+                        .then((value) => {
+                                setState(value);
+                        })
+                        .catch((error) => {
+                                console.error("Error getting storage item: ", error);
+                        });
+        }, [key]);
 
 	const setValue = useCallback(
 		(value: string | null) => {
