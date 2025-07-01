@@ -1,17 +1,15 @@
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import {useAuthContext} from "@contexts/AuthContext.tsx";
 
 export default function NotFoundPage() {
-	const navigate = useNavigate();
-	const location = useLocation();
-	const { logout } = useAuthContext();
+        const navigation = useNavigation<any>();
+        const route = useRoute();
+        const { logout } = useAuthContext();
 
-	const handleLogout = () => {
-		logout(); // Esto ya maneja limpiar el token y el userId
-		navigate(`/auth/login?from=${encodeURIComponent(location.pathname)}`, {
-			replace: true,
-		});
-	};
+        const handleLogout = () => {
+                logout(); // Esto ya maneja limpiar el token y el userId
+                navigation.navigate('Auth');
+        };
 	return (
 		<div className="min-h-screen flex flex-col items-center justify-center bg-gray-100">
 			<div className="text-center">
@@ -21,17 +19,17 @@ export default function NotFoundPage() {
 				<h2 className="text-2xl font-semibold text-gray-600 mb-4">
 					Página No Encontrada
 				</h2>
-				<p className="text-gray-500 mb-6">
-					La ruta <code className="bg-gray-200 px-2 py-1 rounded">{location.pathname}</code> no existe
-				</p>
+                                <p className="text-gray-500 mb-6">
+                                        La ruta <code className="bg-gray-200 px-2 py-1 rounded">{String(route.name)}</code> no existe
+                                </p>
 				<div className="space-x-4">
-					<button 
-						id="historyBack" 
-						onClick={() => navigate(-1)}
-						className="bg-gray-500 text-white px-6 py-2 rounded-lg hover:bg-gray-600 transition-colors"
-					>
-						Volver Atrás
-					</button>
+                                        <button
+                                                id="historyBack"
+                                                onClick={() => navigation.goBack()}
+                                                className="bg-gray-500 text-white px-6 py-2 rounded-lg hover:bg-gray-600 transition-colors"
+                                        >
+                                                Volver Atrás
+                                        </button>
 					<button 
 						onClick={handleLogout}
 						className="bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary-dark transition-colors"
