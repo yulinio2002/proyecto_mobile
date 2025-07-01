@@ -1,7 +1,7 @@
 import Profile from "@components/Profile";
 import React, { ChangeEvent, FormEvent, useState, useEffect } from "react";
 import { getRoleBasedOnToken } from "src/utils/getRoleBasedOnToken";
-import { useNavigate } from "react-router-dom";
+import { useNavigation } from "@react-navigation/native";
 import { useAuthContext } from "@contexts/AuthContext";
 import {getMeInfo} from "@services/auth/me.ts";
 import {eliminarProveedor, updateProveedor} from "@services/proveedor/proveedor.ts"
@@ -10,7 +10,7 @@ import {Navbar} from "@components/Navbar.tsx";
 
 
 export default function EditProfilePage() {
-	const navigate = useNavigate();
+        const navigation = useNavigation<any>();
 	const [userId, setUserId] = useState<number | null>(null);
 	const [formData, setFormData] = useState({
 		id: 0,
@@ -79,8 +79,8 @@ export default function EditProfilePage() {
 				await eliminarCliente(userId);
 			}
 			//localStorage.removeItem("token");
-			logout();
-			navigate("/auth/login");
+                        logout();
+                        navigation.navigate("Auth");
 		} catch (error) {
 			console.error("Error deleting user:", error);
 		}
@@ -113,8 +113,8 @@ export default function EditProfilePage() {
 			e.preventDefault();
 			await fetchUpdateUser();
 
-			navigate("/servicios");
-		}
+                        navigation.navigate("Servicios");
+                }
 
 	return (
 		<div>
