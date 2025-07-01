@@ -1,7 +1,7 @@
 import Profile from "@components/Profile";
 import React, { ChangeEvent, FormEvent, useState, useEffect } from "react";
 import { getRoleBasedOnToken } from "src/utils/getRoleBasedOnToken";
-import { useNavigate } from "react-router-dom";
+import { useNavigation } from "@react-navigation/native";
 import { useAuthContext } from "@contexts/AuthContext";
 import {getMeInfo} from "@services/auth/me.ts";
 import {eliminarProveedor, updateProveedor} from "@services/proveedor/proveedor.ts"
@@ -10,7 +10,7 @@ import {Navbar} from "@components/Navbar.tsx";
 
 
 export default function EditProfilePage() {
-	const navigate = useNavigate();
+        const navigation = useNavigation<any>();
 	const [userId, setUserId] = useState<number | null>(null);
 	const [formData, setFormData] = useState({
 		id: 0,
@@ -20,7 +20,7 @@ export default function EditProfilePage() {
 		descripcion: "",
 		role: ['ROLE_CLIENTE'],
 	});
-	const { logout } = useAuthContext();
+        const { logout, session } = useAuthContext();
 
 	useEffect(() => {
 		fetchUserData();
@@ -31,7 +31,7 @@ export default function EditProfilePage() {
 			const user = await getMeInfo();
 			setUserId(user.id);
 
-			if (getRoleBasedOnToken() === "ROLE_CLIENTE") {
+                        if (getRoleBasedOnToken(session) === "ROLE_CLIENTE") {
 				// Si el backend devuelve nombre completo, dividirlo
 				const nombreCompleto = user.nombre || "";
 				const partes = nombreCompleto.trim().split(' ');
@@ -73,14 +73,14 @@ export default function EditProfilePage() {
 	async function fetchDeleteUser() {
 		if (!userId) return;
 		try {
-			if (getRoleBasedOnToken() === "ROLE_PROVEEDOR") {
+                        if (getRoleBasedOnToken(session) === "ROLE_PROVEEDOR") {
 				await eliminarProveedor(userId);
-			} else if (getRoleBasedOnToken() === "ROLE_CLIENTE") {
+                        } else if (getRoleBasedOnToken(session) === "ROLE_CLIENTE") {
 				await eliminarCliente(userId);
 			}
 			//localStorage.removeItem("token");
-			logout();
-			navigate("/auth/login");
+                        logout();
+                        navigation.navigate("Auth");
 		} catch (error) {
 			console.error("Error deleting user:", error);
 		}
@@ -90,13 +90,13 @@ export default function EditProfilePage() {
 		if (!userId) return;
 
 		try {
-			if (getRoleBasedOnToken() === "ROLE_PROVEEDOR") {
+                        if (getRoleBasedOnToken(session) === "ROLE_PROVEEDOR") {
 				await updateProveedor(userId, {
 					nombre: formData.nombre,
 					descripcion: formData.descripcion,
 					telefono: formData.telefono
 				});
-			} else if (getRoleBasedOnToken() === "ROLE_CLIENTE") {
+                        } else if (getRoleBasedOnToken(session) === "ROLE_CLIENTE") {
 				await updateCliente(userId, {
 					nombre: formData.nombre,
 					apellido: formData.apellido,
@@ -113,8 +113,8 @@ export default function EditProfilePage() {
 			e.preventDefault();
 			await fetchUpdateUser();
 
-			navigate("/servicios");
-		}
+                        navigation.navigate("Servicios");
+                }
 
 	return (
 		<div>
@@ -138,8 +138,8 @@ export default function EditProfilePage() {
 						/>
 					</div>
 
-					{/* Mostrar apellido solo para clientes */}
-					{getRoleBasedOnToken() === "ROLE_CLIENTE" && (
+                                        {/* Mostrar apellido solo para clientes */}
+                                        {getRoleBasedOnToken(session) === "ROLE_CLIENTE" && (
 						<div>
 							<label htmlFor="apellido" className="block text-sm font-medium mb-2">Apellido</label>
 							<input
@@ -154,8 +154,8 @@ export default function EditProfilePage() {
 						</div>
 					)}
 
-					{/* Mostrar descripción solo para proveedores */}
-					{getRoleBasedOnToken() === "ROLE_PROVEEDOR" && (
+                                        {/* Mostrar descripción solo para proveedores */}
+                                        {getRoleBasedOnToken(session) === "ROLE_PROVEEDOR" && (
 						<div>
 							<label htmlFor="descripcion" className="block text-sm font-medium mb-2">Descripción</label>
 							<textarea

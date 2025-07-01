@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useReducer } from "react";
 import * as SecureStore from "expo-secure-store";
-
 type UseStateHook<T> = [[boolean, T | null], (value: T | null) => void];
 
 function useAsyncState<T>(
@@ -35,6 +34,7 @@ export function useStorageState(key: string): UseStateHook<string> {
                         .catch((error) => {
                                 console.error("Error getting storage item: ", error);
                         });
+
         }, [key]);
 
 	const setValue = useCallback(
