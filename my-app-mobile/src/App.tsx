@@ -1,10 +1,10 @@
-//import {Navbar} from "@components/Navbar";
-import { Outlet } from "react-router-dom";
+import { AuthProvider } from '@contexts/AuthContext';
+import AppNavigator from './navigation/AppNavigator';
 
 export default function App() {
-	return (
-		<div className="min-h-screen bg-gray-50">
-			<Outlet />
-		</div>
-	);
+  return (
+    <AuthProvider>
+      <AppNavigator />
+    </AuthProvider>
+  );
 }
