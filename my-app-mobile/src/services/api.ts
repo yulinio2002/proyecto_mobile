@@ -22,8 +22,7 @@ export default class Api {
 
 	public static async getInstance() {
 		if (!this._instance) {
-			// const basePath = `http://${import.meta.env.VITE_BASE_URL}:8081`; // Adjust the base URL as needed
-			const basePath = `http://localhost:8081`; // Adjust the base URL as needed
+			const basePath = `http://${import.meta.env.VITE_BASE_URL}:8081`; // Adjust the base URL as needed
 			this._instance = new Api(basePath, null);
 		}
 
