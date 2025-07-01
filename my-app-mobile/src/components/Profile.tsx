@@ -2,6 +2,7 @@ import { getMeInfo } from "@services/auth/me";
 import { useEffect, useState } from "react";
 import { FaUserCircle } from "react-icons/fa";
 import { getRoleBasedOnToken } from "src/utils/getRoleBasedOnToken";
+import { useAuthContext } from "@contexts/AuthContext";
 import {AuthMeDto} from "@interfaces/auth/AuthMeDto.ts";
 
 interface ProfileProps {
@@ -9,8 +10,9 @@ interface ProfileProps {
 }
 
 export default function Profile(props: ProfileProps) {
-	const [profileInfo, setProfileInfo] = useState<AuthMeDto | null>(null);
-	const [isProveedor, setIsProveedor] = useState(false);
+        const [profileInfo, setProfileInfo] = useState<AuthMeDto | null>(null);
+        const [isProveedor, setIsProveedor] = useState(false);
+        const { session } = useAuthContext();
 
 	useEffect(() => {
 		fetchProfileInfo();
@@ -18,7 +20,7 @@ export default function Profile(props: ProfileProps) {
 
 	async function fetchProfileInfo() {
 		try {
-			const role = getRoleBasedOnToken();
+                        const role = getRoleBasedOnToken(session);
 			const userData = await getMeInfo();
 
 			if (role === "ROLE_PROVEEDOR") {

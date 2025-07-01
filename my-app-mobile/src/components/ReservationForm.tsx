@@ -1,5 +1,6 @@
 // src/components/ReservationForm.tsx
 import React, { useState, useEffect } from "react";
+import * as Location from "expo-location";
 import { Plus, X } from "lucide-react";
 import Button from "./Button";
 import { obtenerHorariosPorServicio } from "@services/disponibilidad/horarioService";
@@ -24,6 +25,7 @@ export const ReservationForm: React.FC<ReservationFormProps> = ({
   const [selectedHorarioId, setSelectedHorarioId] = useState<number | "">("");
   const [fecha, setFecha] = useState<string>(""); // formato YYYY-MM-DD
   const [direccion, setDireccion] = useState<string>("");
+  const [locating, setLocating] = useState(false);
   const [errors, setErrors] = useState<{
     fecha?: string;
     horario?: string;
@@ -51,6 +53,24 @@ export const ReservationForm: React.FC<ReservationFormProps> = ({
     if (!direccion.trim()) errs.direccion = "La dirección es requerida";
     setErrors(errs);
     return Object.keys(errs).length === 0;
+  };
+
+  const handleUseLocation = async () => {
+    setLocating(true);
+    try {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        alert("Permiso de ubicación denegado");
+        return;
+      }
+      const loc = await Location.getCurrentPositionAsync({});
+      setDireccion(`${loc.coords.latitude}, ${loc.coords.longitude}`);
+    } catch (err) {
+      console.error("Error obteniendo ubicación", err);
+      alert("No se pudo obtener la ubicación");
+    } finally {
+      setLocating(false);
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -137,6 +157,14 @@ export const ReservationForm: React.FC<ReservationFormProps> = ({
               errors.direccion ? "border-red-500" : "border-gray-300"
             }`}
           />
+          <button
+            type="button"
+            onClick={handleUseLocation}
+            disabled={isLoading || locating}
+            className="mt-2 text-sm text-indigo-600"
+          >
+            {locating ? "Obteniendo ubicación..." : "Usar mi ubicación"}
+          </button>
           {errors.direccion && <p className="mt-1 text-sm text-red-600">{errors.direccion}</p>}
         </div>
 

@@ -18,6 +18,7 @@ export type RootStackParamList = {
   ReservasCliente: undefined;
   EditProfile: undefined;
   NotFound: undefined;
+
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -33,6 +34,7 @@ export default function AppNavigator() {
         <Stack.Screen name="ReservasCliente" component={ReservasPageCliente} />
         <Stack.Screen name="EditProfile" component={EditProfilePage} />
         <Stack.Screen name="NotFound" component={NotFoundPage} />
+
       </Stack.Navigator>
     </NavigationContainer>
   );

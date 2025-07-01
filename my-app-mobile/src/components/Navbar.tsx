@@ -21,16 +21,13 @@ export const Navbar: React.FC<NavbarProps> = ({
 }) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { logout } = useAuthContext();
-    const [role, setRole] = useState<string | null>(null);
+  const { logout, session } = useAuthContext();
+  const [role, setRole] = useState<string | null>(null);
 
-    useEffect(() => {
-        const fetchRole = async () => {
-            const userRole = await getRoleBasedOnToken();
-            setRole(userRole);
-        };
-        fetchRole();
-    }, []);
+  useEffect(() => {
+    const userRole = getRoleBasedOnToken(session);
+    setRole(userRole);
+  }, [session]);
 
   const handleLogout = () => {
     // 2. Avisar al contexto que cerramos sesión
