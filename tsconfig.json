@@ -1,8 +1,22 @@
 {
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
-    // ...tus opciones previas
+     "baseUrl": "./src",
+      "paths":
+      {
+        "@components/*": ["components/*"],
+        "@screens/*": ["screens/*"],
+        "@assets/*": ["assets/*"],
+        "@hooks/*": ["hooks/*"],
+        "@utils/*": ["utils/*"],
+        "@navigation/*": ["navigation/*"],
+        "@constants/*": ["constants/*"],
+        "@types/*": ["types/*"]
+      },
+    "jsx": "react-native",
     "types": ["nativewind/types"]
   },
   "include": ["src", "nativewind.d.ts"]
+  
 }
+

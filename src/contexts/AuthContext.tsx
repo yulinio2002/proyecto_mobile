@@ -1,8 +1,8 @@
 // src/contexts/AuthContext.tsx
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import * as Keychain from 'react-native-keychain';
+import * as SecureStore from 'expo-secure-store';
 import Api from '../services/api';
-import { AuthResponse } from '../interfaces/auth/AuthResponse';
+import type { ReactNode } from 'react';
 
 interface AuthContextType {
   session: string | null;
@@ -14,7 +14,7 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
+export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<string | null>(null);
   const [userId, setUserId] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -25,12 +25,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const loadStoredAuth = async () => {
     try {
-      const credentials = await Keychain.getInternetCredentials('auth');
-      if (credentials) {
-        const { password: token, username: id } = credentials;
+      const stored = await SecureStore.getItemAsync('auth');
+      if (stored) {
+        const { token, id } = JSON.parse(stored);
         setSession(token);
-        setUserId(parseInt(id));
-        
+        setUserId(id);
         const api = await Api.getInstance();
         api.authorization = token;
       }
@@ -41,27 +40,35 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const login = async (credentials: { email: string; password: string }) => {
+  const login = async ({ email, password }: { email: string; password: string }) => {
     const api = await Api.getInstance();
-    type LoginResponse = { token: string; id: number };
-    const response = await api.post<AuthResponse>(credentials, { url: '/auth/login' });
-    
+    const response = await api.post<{ email: string; password: string }, { token: string; id: number }>(
+      { email, password },
+      { url: '/auth/login' }
+    );
     const { token, id } = response.data;
-    
-    // Guardar en keychain
-    await Keychain.setInternetCredentials('auth', id.toString(), token);
-    
+
+    // Guarda credenciales en SecureStore
+    await SecureStore.setItemAsync('auth', JSON.stringify({ token, id }));
+
     setSession(token);
     setUserId(id);
     api.authorization = token;
   };
 
+    // Guarda credenciales en SecureStore
+  //   await SecureStore.setItemAsync('auth', JSON.stringify({ token, id }));
+
+  //   setSession(token);
+  //   setUserId(id);
+  //   api.authorization = token;
+  // };
+
   const logout = async () => {
     try {
-      await Keychain.resetInternetCredentials('auth');
+      await SecureStore.deleteItemAsync('auth');
       setSession(null);
       setUserId(null);
-      
       const api = await Api.getInstance();
       api.authorization = '';
     } catch (error) {
