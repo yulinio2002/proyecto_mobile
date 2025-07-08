@@ -16,10 +16,10 @@ export default function Profile(props: ProfileProps) {
 		fetchProfileInfo();
 	}, []);
 
-	async function fetchProfileInfo() {
-		try {
-			const role = getRoleBasedOnToken();
-			const userData = await getMeInfo();
+        async function fetchProfileInfo() {
+                try {
+                        const role = await getRoleBasedOnToken();
+                        const userData = await getMeInfo();
 
 			if (role === "ROLE_PROVEEDOR") {
 				setProfileInfo(userData);

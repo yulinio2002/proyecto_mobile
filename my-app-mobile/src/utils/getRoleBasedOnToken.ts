@@ -1,4 +1,5 @@
 import { jwtDecode } from "jwt-decode";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface DecodedToken {
 	roles: string[];
@@ -6,9 +7,9 @@ interface DecodedToken {
 	exp: number;
 }
 
-export function getRoleBasedOnToken(): string | null {
-	const token = localStorage.getItem("token");
-	if (!token) return null;
+export async function getRoleBasedOnToken(): Promise<string | null> {
+        const token = await AsyncStorage.getItem("token");
+        if (!token) return null;
 
 	try {
 		const decodedToken = jwtDecode<DecodedToken>(token);
