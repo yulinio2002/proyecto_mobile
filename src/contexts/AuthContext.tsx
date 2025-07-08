@@ -56,14 +56,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     api.authorization = token;
   };
 
-    // Guarda credenciales en SecureStore
-  //   await SecureStore.setItemAsync('auth', JSON.stringify({ token, id }));
-
-  //   setSession(token);
-  //   setUserId(id);
-  //   api.authorization = token;
-  // };
-
   const logout = async () => {
     try {
       await SecureStore.deleteItemAsync('auth');

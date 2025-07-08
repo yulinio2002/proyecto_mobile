@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import { useAuthContext } from '../contexts/AuthContext';
+import { registerCliente, registerProveedor } from '../services/auth/register';
 import type { RegisterRequest } from '../interfaces/auth/RegisterRequest';
 
 interface RegisterFormProps {
@@ -11,7 +11,6 @@ interface RegisterFormProps {
 
 export default function RegisterForm({ formData, setFormData }: RegisterFormProps) {
   const [confirmPassword, setConfirmPassword] = useState<string>('');
-// const { register } = useAuthContext();
 
   const handleChange = (name: keyof typeof formData, value: string | boolean) => {
     setFormData(prev => ({
@@ -42,10 +41,17 @@ export default function RegisterForm({ formData, setFormData }: RegisterFormProp
       return;
     }
     try {
-    //   await register(formData);
-      // Navegación tras registro (usar navigation.navigate dentro del hook si lo deseas)
+      if (formData.isClient) {
+        await registerCliente(formData);
+      } else {
+        await registerProveedor(formData);
+      }
+      Alert.alert('Registro exitoso', 'Ahora puedes iniciar sesión');
     } catch (error: any) {
-      Alert.alert('Error al registrar', error.message);
+      Alert.alert(
+        'Error al registrar',
+        error.response?.data?.message || error.message
+      );
     }
   };
 

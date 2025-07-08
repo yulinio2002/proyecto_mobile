@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Alert } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 import { useAuthContext } from '../contexts/AuthContext';
 // import { getRoleBasedOnToken } from '../utils/getRoleBasedOnToken';
 import Button from './Button';
@@ -10,7 +9,6 @@ export default function LoginForm() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const { login } = useAuthContext();
-  const navigation = useNavigation();
 
   const handleSubmit = async () => {
     if (!email || !password) {

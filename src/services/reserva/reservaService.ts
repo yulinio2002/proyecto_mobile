@@ -1,6 +1,6 @@
 import Api from "../api";
-import { ReservaRequest, } from "../../interfaces/reserva/ReservaRequest";
-import { ReservaResponse } from "../../interfaces/reserva/RerservaResponse";
+import { ReservaRequest } from "../../interfaces/reserva/ReservaRequest";
+import { ReservaResponse } from "../../interfaces/reserva/ReservaResponse";
 export async function obtenerReservasProveedor(
     proveedorId: number
 ): Promise<ReservaResponse[]> {

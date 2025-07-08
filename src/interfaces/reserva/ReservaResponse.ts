@@ -4,4 +4,5 @@ export interface ReservaResponse {
     direccion: string;
     estado: string;
     clienteId: number;
-    servicioId: number;}
+    servicioId: number;
+}
