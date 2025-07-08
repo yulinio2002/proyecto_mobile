@@ -10,7 +10,7 @@ interface RegisterFormProps {
 }
 
 export default function RegisterForm({ formData, setFormData }: RegisterFormProps) {
-  const [confirmPassword, setConfirmPassword] = useState<string>('');
+  const [confirmPassword, setConfirmPassword] = useState('');
 
   const handleChange = (name: keyof typeof formData, value: string | boolean) => {
     setFormData(prev => ({

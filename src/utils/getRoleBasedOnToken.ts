@@ -15,7 +15,7 @@ export async function getRoleBasedOnToken(): Promise<string | null> {
   // 'stored' es un JSON string con { token, id }
   try {
     const { token } = JSON.parse(stored);
-    const decoded = jwtDecode<DecodedToken>(token);
+    const decoded = jwtDecode(token) as any as DecodedToken;
     if (decoded.roles && decoded.roles.length > 0) {
       return decoded.roles[0];
     }

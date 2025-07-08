@@ -6,8 +6,8 @@ import RegisterForm from '../components/RegisterForm';
 import { TabNavigation } from '../components/TabNavigation';
 
 export default function AuthScreen() {
-  const [activeTab, setActiveTab] = useState<'login' | 'register'>('login');
-  const [registerFormData, setRegisterFormData] = useState<any>({});
+  const [activeTab, setActiveTab] = useState('login');
+  const [registerFormData, setRegisterFormData] = useState({});
 
   return (
     <SafeAreaView className="flex-1 bg-gradient-to-br from-indigo-500 to-purple-600">

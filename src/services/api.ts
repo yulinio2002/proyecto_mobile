@@ -1,5 +1,5 @@
 // src/services/api.ts
-import axios, { AxiosRequestConfig, AxiosResponse,RawAxiosRequestHeaders } from 'axios';
+import axios from 'axios';
 
 export default class Api {
   private static _instance: Api | null = null;
@@ -26,13 +26,13 @@ export default class Api {
     }
     return this._instance;
   }
-  public async request<RequestType, ResponseType>(config: AxiosRequestConfig) {
-		const headers: RawAxiosRequestHeaders = {
+  public async request<RequestType, ResponseType>(config: any) {
+                const headers: any = {
 			"Content-Type": "application/json",
 			Authorization: this._authorization ? `Bearer ${this._authorization}` : "",
 		};
 
-		const configOptions: AxiosRequestConfig = {
+                const configOptions: any = {
 			...config,
 			baseURL: this._basePath,
 			headers: headers,
@@ -40,11 +40,11 @@ export default class Api {
 
 		const path = this._basePath + config.url;
 
-		return axios<RequestType, AxiosResponse<ResponseType>>(path, configOptions);
+                return axios(path, configOptions) as Promise<any>;
 	}
 
-	public get<RequestType, ResponseType>(config: AxiosRequestConfig) {
-		const configOptions: AxiosRequestConfig = {
+        public get<RequestType, ResponseType>(config: any) {
+                const configOptions: any = {
 			...config,
 			method: "GET",
 		};
@@ -52,11 +52,11 @@ export default class Api {
 		return this.request<RequestType, ResponseType>(configOptions);
 	}
 
-	public post<RequestBodyType, ResponseBodyType>(
-		data: RequestBodyType,
-		options: AxiosRequestConfig,
-	) {
-		const configOptions: AxiosRequestConfig = {
+        public post<RequestBodyType, ResponseBodyType>(
+                data: RequestBodyType,
+                options: any,
+        ) {
+                const configOptions: any = {
 			...options,
 			method: "POST",
 			data,
@@ -65,8 +65,8 @@ export default class Api {
 		return this.request<RequestBodyType, ResponseBodyType>(configOptions);
 	}
 
-	public delete(options: AxiosRequestConfig) {
-		const configOptions: AxiosRequestConfig = {
+        public delete(options: any) {
+                const configOptions: any = {
 			...options,
 			method: "DELETE",
 		};
@@ -74,11 +74,11 @@ export default class Api {
 		return this.request<void, void>(configOptions);
 	}
 
-	public put<RequestBodyType, ResponseBodyType>(
-		data: RequestBodyType,
-		options: AxiosRequestConfig,
-	) {
-		const configOptions: AxiosRequestConfig = {
+        public put<RequestBodyType, ResponseBodyType>(
+                data: RequestBodyType,
+                options: any,
+        ) {
+                const configOptions: any = {
 			...options,
 			method: "PUT",
 			data: data,
@@ -87,11 +87,11 @@ export default class Api {
 		return this.request<RequestBodyType, ResponseBodyType>(configOptions);
 	}
 
-	public patch<RequestBodyType, ResponseBodyType>(
-		data: RequestBodyType,
-		options: AxiosRequestConfig,
-	) {
-		const configOptions: AxiosRequestConfig = {
+        public patch<RequestBodyType, ResponseBodyType>(
+                data: RequestBodyType,
+                options: any,
+        ) {
+                const configOptions: any = {
 			...options,
 			method: "PATCH",
 			data: data,

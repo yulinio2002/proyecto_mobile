@@ -2,7 +2,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import * as SecureStore from 'expo-secure-store';
 import Api from '../services/api';
-import type { ReactNode } from 'react';
+type ReactNode = any;
 
 interface AuthContextType {
   session: string | null;
@@ -12,11 +12,11 @@ interface AuthContextType {
   isLoading: boolean;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const AuthContext = createContext(undefined as any);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [session, setSession] = useState<string | null>(null);
-  const [userId, setUserId] = useState<number | null>(null);
+  const [session, setSession] = useState(null as string | null);
+  const [userId, setUserId] = useState(null as number | null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

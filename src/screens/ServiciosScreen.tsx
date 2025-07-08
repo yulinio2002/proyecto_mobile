@@ -9,7 +9,7 @@ import Button from '../components/Button';
 
 export default function ServiciosScreen({ navigation }: any) {
   const { userId } = useAuthContext();
-  const [servicios, setServicios] = useState<ServicioResponse[]>([]);
+  const [servicios, setServicios] = useState([] as any[]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 

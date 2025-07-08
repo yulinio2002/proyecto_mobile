@@ -3,7 +3,7 @@ import RegisterForm from '../components/RegisterForm';
 import type { RegisterRequest } from '../interfaces/auth/RegisterRequest';
 
 export default function RegisterScreen() {
-  const [formData, setFormData] = useState<RegisterRequest & { isClient: boolean }>({
+  const [formData, setFormData] = useState({
     nombre: '', apellido: '', email: '', telefono: '', password: '', descripcion: '', foto: undefined, isClient: true
   });
   return <RegisterForm formData={formData} setFormData={setFormData} />;

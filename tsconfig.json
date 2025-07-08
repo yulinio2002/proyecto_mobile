@@ -1,5 +1,4 @@
 {
-  "extends": "expo/tsconfig.base",
   "compilerOptions": {
      "baseUrl": "./src",
       "paths":
@@ -14,9 +13,12 @@
         "@types/*": ["types/*"]
       },
     "jsx": "react-native",
-    "types": ["nativewind/types"]
+    "types": [],
+    "lib": ["es2017", "dom"],
+    "skipLibCheck": true,
+    "noImplicitAny": false
   },
-  "include": ["src", "nativewind.d.ts"]
+  "include": ["src", "nativewind.d.ts", "src/types"]
   
 }
 
