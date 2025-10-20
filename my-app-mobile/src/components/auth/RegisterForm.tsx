@@ -3,7 +3,6 @@ import { ChangeEvent, FormEvent, Dispatch, SetStateAction, useState } from "reac
 import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "@contexts/AuthContext";
 import { PhotoUpload } from "@components/auth/PhotoUpload";
-import { getRoleBasedOnToken } from "../../utils/getRoleBasedOnToken";
 
 interface RegisterFormProps {
 	formData: RegisterRequest & { isClient: boolean };

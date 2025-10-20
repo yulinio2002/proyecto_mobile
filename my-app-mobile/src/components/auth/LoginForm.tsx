@@ -28,10 +28,10 @@ export default function LoginForm() {
 		setSuccessMessage("");
 
 		try {
-			await login(formData);
+                        await login(formData);
 
-			// Redirigir inmediatamente según el rol, sin setTimeout
-			const role = getRoleBasedOnToken();
+                        // Redirigir inmediatamente según el rol
+                        const role = await getRoleBasedOnToken();
 			if (role === "ROLE_PROVEEDOR") {
 				navigate("/servicios", { replace: true });
 			} else if (role === "ROLE_CLIENTE") {

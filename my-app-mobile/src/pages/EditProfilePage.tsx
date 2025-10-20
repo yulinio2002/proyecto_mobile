@@ -10,8 +10,9 @@ import {Navbar} from "@components/Navbar.tsx";
 
 
 export default function EditProfilePage() {
-	const navigate = useNavigate();
-	const [userId, setUserId] = useState<number | null>(null);
+        const navigate = useNavigate();
+        const [userId, setUserId] = useState<number | null>(null);
+        const [role, setRole] = useState<string | null>(null);
 	const [formData, setFormData] = useState({
 		id: 0,
 		nombre: "",
@@ -26,17 +27,19 @@ export default function EditProfilePage() {
 		fetchUserData();
 	}, []);
 
-	async function fetchUserData() {
-		try {
-			const user = await getMeInfo();
-			setUserId(user.id);
+        async function fetchUserData() {
+                try {
+                        const user = await getMeInfo();
+                        setUserId(user.id);
+                        const currentRole = await getRoleBasedOnToken();
+                        setRole(currentRole);
 
-			if (getRoleBasedOnToken() === "ROLE_CLIENTE") {
-				// Si el backend devuelve nombre completo, dividirlo
-				const nombreCompleto = user.nombre || "";
-				const partes = nombreCompleto.trim().split(' ');
-				const nombre = partes[0] || "";
-				const apellido = partes.slice(1).join(' ') || "";
+                        if (currentRole === "ROLE_CLIENTE") {
+                                // Si el backend devuelve nombre completo, dividirlo
+                                const nombreCompleto = user.nombre || "";
+                                const partes = nombreCompleto.trim().split(' ');
+                                const nombre = partes[0] || "";
+                                const apellido = partes.slice(1).join(' ') || "";
 
 				setFormData({
 					id: user.id,
@@ -46,11 +49,11 @@ export default function EditProfilePage() {
 					telefono: user.telefono,
 					role: user.role
 				});
-			} else {
-				// ROLE_PROVEEDOR
-				setFormData({
-					id: user.id,
-					nombre: user.nombre,
+                        } else {
+                                // ROLE_PROVEEDOR
+                                setFormData({
+                                        id: user.id,
+                                        nombre: user.nombre,
 					apellido: "",
 					descripcion: user.descripcion || "",
 					telefono: user.telefono,
@@ -70,14 +73,15 @@ export default function EditProfilePage() {
 		}));
 	}
 
-	async function fetchDeleteUser() {
-		if (!userId) return;
-		try {
-			if (getRoleBasedOnToken() === "ROLE_PROVEEDOR") {
-				await eliminarProveedor(userId);
-			} else if (getRoleBasedOnToken() === "ROLE_CLIENTE") {
-				await eliminarCliente(userId);
-			}
+        async function fetchDeleteUser() {
+                if (!userId) return;
+                try {
+                        const currentRole = role ?? await getRoleBasedOnToken();
+                        if (currentRole === "ROLE_PROVEEDOR") {
+                                await eliminarProveedor(userId);
+                        } else if (currentRole === "ROLE_CLIENTE") {
+                                await eliminarCliente(userId);
+                        }
 			//localStorage.removeItem("token");
 			logout();
 			navigate("/auth/login");
@@ -86,21 +90,22 @@ export default function EditProfilePage() {
 		}
 	}
 
-	async function fetchUpdateUser() {
-		if (!userId) return;
+        async function fetchUpdateUser() {
+                if (!userId) return;
 
-		try {
-			if (getRoleBasedOnToken() === "ROLE_PROVEEDOR") {
-				await updateProveedor(userId, {
-					nombre: formData.nombre,
-					descripcion: formData.descripcion,
-					telefono: formData.telefono
-				});
-			} else if (getRoleBasedOnToken() === "ROLE_CLIENTE") {
-				await updateCliente(userId, {
-					nombre: formData.nombre,
-					apellido: formData.apellido,
-					telefono: formData.telefono,
+                try {
+                        const currentRole = role ?? await getRoleBasedOnToken();
+                        if (currentRole === "ROLE_PROVEEDOR") {
+                                await updateProveedor(userId, {
+                                        nombre: formData.nombre,
+                                        descripcion: formData.descripcion,
+                                        telefono: formData.telefono
+                                });
+                        } else if (currentRole === "ROLE_CLIENTE") {
+                                await updateCliente(userId, {
+                                        nombre: formData.nombre,
+                                        apellido: formData.apellido,
+                                        telefono: formData.telefono,
 					foto: "",								// POR MIENTRAS NO TENEMOS UN SERVIDOR DE IMAGENES
 				});
 			}
@@ -138,8 +143,8 @@ export default function EditProfilePage() {
 						/>
 					</div>
 
-					{/* Mostrar apellido solo para clientes */}
-					{getRoleBasedOnToken() === "ROLE_CLIENTE" && (
+                                        {/* Mostrar apellido solo para clientes */}
+                                        {role === "ROLE_CLIENTE" && (
 						<div>
 							<label htmlFor="apellido" className="block text-sm font-medium mb-2">Apellido</label>
 							<input
@@ -154,8 +159,8 @@ export default function EditProfilePage() {
 						</div>
 					)}
 
-					{/* Mostrar descripción solo para proveedores */}
-					{getRoleBasedOnToken() === "ROLE_PROVEEDOR" && (
+                                        {/* Mostrar descripción solo para proveedores */}
+                                        {role === "ROLE_PROVEEDOR" && (
 						<div>
 							<label htmlFor="descripcion" className="block text-sm font-medium mb-2">Descripción</label>
 							<textarea
